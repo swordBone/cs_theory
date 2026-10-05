@@ -1,0 +1,91 @@
+name: Build and publish PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '习题解答_2_3_5章.tex'
+      - '.github/workflows/latex-pdf.yml'
+      - 'docs/index.html'
+  pull_request:
+    paths:
+      - '习题解答_2_3_5章.tex'
+      - '.github/workflows/latex-pdf.yml'
+      - 'docs/index.html'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: latex-pdf-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Compile with XeLaTeX
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Compile bilingual solutions
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        with:
+          root_file: '习题解答_2_3_5章.tex'
+          texlive_version: '2026'
+          latexmk_use_xelatex: true
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -jobname=solutions
+
+      - name: Save compilation log
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: latex-build-log
+          path: solutions.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Prepare PDF publication
+        shell: bash
+        run: |
+          install -Dm644 solutions.pdf _site/solutions.pdf
+          install -Dm644 docs/index.html _site/index.html
+
+      - name: Save downloadable PDF
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: exercise-solutions-pdf
+          path: _site/solutions.pdf
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: _site
+
+  deploy:
+    name: Publish PDF to GitHub Pages
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+
+      - name: Deploy PDF
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
