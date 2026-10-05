@@ -1,0 +1,1158 @@
+% !TeX program = xelatex
+% In Overleaf, select XeLaTeX in the project Compiler settings.
+\documentclass[UTF8,fontset=fandol,11pt,a4paper]{ctexart}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,enumitem}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\setlist[enumerate]{itemsep=3pt,topsep=5pt}
+\setlength{\emergencystretch}{2em}
+\setcounter{secnumdepth}{0}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\NAND}{\operatorname{NAND}}
+\newcommand{\MAJ}{\operatorname{MAJ}}
+\newcommand{\LOOKUP}{\operatorname{LOOKUP}}
+\newcommand{\SIZE}{\operatorname{SIZE}}
+\title{理论计算机科学导引\\第 2、3、5 章选题解答（中英双语）\\
+\large Selected Exercise Solutions: Chapters 2, 3, and 5}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+\noindent
+依据所提供的 \texttt{lnotes\_book.pdf}，解答习题
+2.4、2.5(1)、2.14、3.9、3.14、5.1、5.2、5.3、5.4、5.9。
+题目所在页分别为 116、118、156--157、211--212 页。
+以下所有 $\log$ 均以 $2$ 为底，$[n]=\{0,\ldots,n-1\}$；
+电路大小指 NAND 门数，允许扇出，连线本身不计门数。
+
+\medskip
+\noindent\textbf{特别说明：}
+5.4 原文对 $m$ 没有限制，这一表述并不成立。
+该题先给出反例，再证明 $1\le m\le 2^n$ 范围内的正确版本。
+这是对原题量词的检查，不是教材中已经声明的附加条件。
+
+\medskip
+\noindent
+This document contains complete Chinese and English solutions to Exercises
+2.4, 2.5(1), 2.14, 3.9, 3.14, 5.1, 5.2, 5.3, 5.4, and 5.9.
+The English solutions form the second part. Exercise 5.4 is false as stated
+when the output length is unrestricted; both parts include a counterexample
+and a proof of a corrected statement.
+
+\tableofcontents
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{part}{中文解答}
+\part*{中文解答}
+
+\section{习题 2.4：有界度图的短编码}
+
+\paragraph{题意}
+令 $G_n$ 为顶点集为 $[n]$、无自环、每个顶点度数至多 $10$ 的有向图集合。
+证明：充分大的 $n$ 存在单射
+\[
+ E:G_n\longrightarrow\bits^{\lfloor1000n\log n\rfloor}.
+\]
+
+\paragraph{构造}
+令 $\ell=\lceil\log n\rceil$。按顶点 $v=0,1,\ldots,n-1$ 的顺序，
+记录 $v$ 的出邻接表。因为出度不超过 $10$，每一行都可写为：
+\begin{enumerate}
+ \item 用 $4$ 位记录出度 $d_v\in\{0,1,\ldots,10\}$；
+ \item 将出邻居按编号递增排列，每个编号用 $\ell$ 位表示，共预留 $10$ 个位置；
+ \item 不足 $10$ 个的位置补全零。
+\end{enumerate}
+注意：编号 $0$ 本身是合法邻居，但不会和补零混淆，因为 $d_v$ 指定了有效位置数。
+无论题目中的度数指总度数还是出度，上述出度上界都成立。
+
+原始编码长度为
+\[
+ L=n\bigl(4+10\lceil\log n\rceil\bigr).
+\]
+当 $n\ge2$ 时，$\lceil\log n\rceil\le2\log n$ 且 $4\le4\log n$，因此
+\[
+ L\le24n\log n\le\lfloor1000n\log n\rfloor.
+\]
+最后在末尾补零，使长度恰好为题目要求的长度。
+
+\paragraph{单射性}
+已知 $n$，可以按固定长度逐行解码，读出 $d_v$，再读出前 $d_v$ 个邻居。
+这样能唯一恢复每个顶点的出邻接表，因而唯一恢复所有有向边。
+所以两个图编码相同必然是同一个图，$E$ 为单射。
+
+\section{习题 2.5(1)：把排列编码成有界度图}
+
+\paragraph{题意}
+令 $S_n$ 为所有双射 $\pi:[n]\to[n]$ 的集合。构造单射 $S_n\to G_{2n}$。
+
+\paragraph{构造与证明}
+把 $[2n]$ 分成左右两部分
+\[
+ L=\{0,\ldots,n-1\},\qquad R=\{n,\ldots,2n-1\}.
+\]
+对排列 $\pi$，定义有向图 $H_\pi$ 的边集为
+\[
+ E(H_\pi)=\bigl\{(i,n+\pi(i)):i\in[n]\bigr\}.
+\]
+每个左侧顶点恰有一条出边；因为 $\pi$ 是双射，每个右侧顶点恰有一条入边。
+各顶点总度数都是 $1$，且两侧不相交，所以没有自环。因此 $H_\pi\in G_{2n}$。
+
+若 $\pi\ne\sigma$，存在 $i$ 使得 $\pi(i)\ne\sigma(i)$，
+于是从顶点 $i$ 出发的边在两图中不同，故 $H_\pi\ne H_\sigma$。
+这就证明了单射性。
+
+\paragraph{容易忽略的条件}
+这里的图是顶点带有固定编号的图，并没有对图同构取商。
+如果抹去编号，这些完美匹配会彼此同构，便不能区分排列。
+
+\section{习题 2.14：有限整数序列的自然数编码}
+
+\paragraph{题意}
+构造单射 $\mathbb Z^*\to\mathbb N$，其中 $\mathbb Z^*$ 包含任意长度的有限整数序列及空序列。
+
+\paragraph{第一步：编码单个整数}
+定义双射 $h:\mathbb Z\to\mathbb N$（这里使用非负整数）为
+\[
+ h(z)=
+ \begin{cases}
+  2z,&z\ge0,\\
+  -2z-1,&z<0.
+ \end{cases}
+\]
+其逆映射为
+\[
+ h^{-1}(a)=
+ \begin{cases}
+  a/2,&a\text{ 为偶数},\\
+  -(a+1)/2,&a\text{ 为奇数}.
+ \end{cases}
+\]
+
+\paragraph{第二步：用素数指数保存位置与内容}
+令 $p_0=2,p_1=3,p_2=5,\ldots$ 为递增的素数序列，定义
+\[
+ E(z_0,\ldots,z_{k-1})=\prod_{i=0}^{k-1}p_i^{h(z_i)+1},
+ \qquad E(\varepsilon)=1.
+\]
+例如
+\[
+ E(-1,0,2)=2^2\cdot3^1\cdot5^5.
+\]
+
+\paragraph{单射性}
+根据算术基本定理，编码整数的素因数分解唯一。
+因为每个使用到的指数都至少是 $1$，非空序列的长度就是出现的连续前若干个素数的个数。
+各指数减去 $1$ 后得到 $h(z_i)$，再用 $h^{-1}$ 得到 $z_i$。
+数 $1$ 没有素因子，仅对应空序列。因此编码可以唯一解码。
+
+这里的 ``$+1$'' 很重要：如果直接使用 $p_i^{h(z_i)}$，末尾的整数 $0$
+会产生指数 $0$，从而无法区分一个序列与在其末尾添加 $0$ 后的序列。
+
+\section{习题 3.9：LOOKUP 的通用性}
+
+\paragraph{题意}
+证明 $\{\LOOKUP_1,0,1\}$ 是通用门集合。教材的参数顺序为
+\[
+ \LOOKUP_1(a,b,c)=
+ \begin{cases}
+  a,&c=0,\\
+  b,&c=1.
+ \end{cases}
+\]
+也就是说，\textbf{第三个参数才是选择位}。
+
+\paragraph{构造基本逻辑门}
+直接检查可得
+\begin{align*}
+ \neg x&=\LOOKUP_1(1,0,x),\\
+ x\land y&=\LOOKUP_1(0,y,x),\\
+ x\lor y&=\LOOKUP_1(y,1,x).
+\end{align*}
+例如第二式中：$x=0$ 时输出 $0$；$x=1$ 时输出 $y$，正好是 $x\land y$。
+
+由于 $\{\mathrm{AND},\mathrm{OR},\mathrm{NOT}\}$ 是通用的，
+把任意布尔电路中的每个基本门替换成上述构造，就能得到仅使用
+$\LOOKUP_1$ 和常数的等价电路。
+
+也可以直接构造 NAND：先令 $t=\LOOKUP_1(1,0,y)=\neg y$，再令
+\[
+ \LOOKUP_1(1,t,x)=\neg(x\land y).
+\]
+所以每个 NAND 门至多用两个 LOOKUP 门替代，结论同样成立。
+
+\section{习题 3.14：线性大小的多数电路}
+
+\paragraph{题意}
+证明存在绝对常数 $c$，使得每个 $n>1$ 的严格多数函数
+\[
+ \MAJ_n(x)=1\quad\Longleftrightarrow\quad
+ \sum_{i=0}^{n-1}x_i>n/2
+\]
+都有不超过 $cn$ 个 NAND 门的电路。
+
+\subsection*{1. 加法器的代价}
+两个 $r$ 位二进制数可以用 $O(r)$ 个 NAND 门相加。
+为说明这一点，一个全加器在一位上计算
+\[
+ p=a\oplus b,\qquad d=p\oplus c_{\mathrm{in}},\qquad
+ c_{\mathrm{out}}=(a\land b)\lor(p\land c_{\mathrm{in}}).
+\]
+XOR 可用 $4$ 个 NAND 门实现，AND 用 $2$ 个，OR 用 $3$ 个，
+因而上述一位全加器至多用 $15$ 个 NAND 门。
+把 $r$ 个全加器按进位串联，就得到门数至多 $15r$ 的加法器，
+输出允许有 $r+1$ 位。
+
+若模型没有预置常数，可以从任意输入 $x_0$ 构造
+\[
+ u=\NAND(x_0,x_0),\quad
+ \mathbf 1=\NAND(x_0,u),\quad
+ \mathbf 0=\NAND(\mathbf 1,\mathbf 1),
+\]
+只需 $3$ 个门，随后共享这些常数线。
+
+\subsection*{2. 平衡树中逐层相加}
+令 $N=2^{\lceil\log n\rceil}$，在原输入后补 $N-n$ 个零。
+于是 $n\le N<2n$，且补零不改变输入中 $1$ 的个数。
+
+在第 $j$ 层，把两个大小为 $2^{j-1}$ 的块的计数相加，
+得到大小为 $2^j$ 的块的计数，其中 $1\le j\le\log N$。
+每个子块的计数至多为 $2^{j-1}$，用 $j$ 位足够，
+所以这一层的每个加法器只需要 $O(j)$ 个门。
+这一层共有 $N/2^j$ 个加法器，因此总门数至多
+\[
+ 15\sum_{j=1}^{\log N}\frac{N}{2^j}j
+ \le15N\sum_{j=1}^{\infty}\frac{j}{2^j}
+ =30N<60n.
+\]
+最后得到二进制计数
+\[
+ S=\sum_{i=0}^{n-1}x_i,
+\]
+它只需要 $\lceil\log(n+1)\rceil$ 位，或保留树中多出的高位零。
+
+这也对应递推式 $T(N)=2T(N/2)+O(\log N)$。
+关键在于低层加法器处理的数很短，而不是让每次相加都使用 $\Theta(\log n)$ 位。
+
+\subsection*{3. 与正确的阈值比较}
+设置常数
+\[
+ t=\lfloor n/2\rfloor+1.
+\]
+对 $S$ 和 $t$ 从最高位向最低位扫描，维护两个状态：
+$e$ 表示此前所有位都相等，$g$ 表示此前已经确定 $S>t$。
+初始 $e=1,g=0$；读到位 $S_i,t_i$ 时同时更新为
+\[
+ g'=g\lor(e\land S_i\land\neg t_i),\qquad
+ e'=e\land\neg(S_i\oplus t_i).
+\]
+每位只用常数个 NAND 门，故总成本为 $O(\log n)$。
+最终输出 $g\lor e$，恰好判断 $S\ge t$。
+
+所以总门数为 $O(n)+O(\log n)+O(1)=O(n)$，存在题目所需的常数 $c$。
+\textbf{注意：}补零后比较的仍是原来的阈值 $n/2$，而不是 $N/2$；
+当 $n$ 为偶数且恰有一半输入为 $1$ 时，输出应为 $0$。
+
+\section{习题 5.1：哪一个求值器大小断言是假的？}
+
+\paragraph{题意与答案}
+输入为一个 NAND-CIRC 程序 $P$ 的编码，输出 $P$ 在全 $1$ 输入上的结果。
+下列三项中，\textbf{第三项 (c) 为假}：
+\begin{enumerate}[label=(\alph*)]
+ \item $P$ 有 $s$ 行，使用 list-of-tuples 编码，求值器大小为 $O(s^3)$：真。
+ \item $P$ 有 $s$ 个字符，使用 $7s$ 位 ASCII 编码，求值器大小为 $O(s^3)$：真。
+ \item $P$ 有 $s$ 行，使用 list-of-tuples 编码，求值器大小为 $O(\sqrt s)$：假。
+\end{enumerate}
+这些断言理解为对合法程序编码正确；非法编码上的行为可以任意指定。
+求值器可以依赖长度参数，但必须能处理该长度的所有合法程序。
+
+\subsection*{(a) 元组编码的多项式大小求值器}
+一个 $s$ 行程序只涉及 $O(s)$ 个实际出现的变量，
+按教材规则重新编号后，每个地址只需 $O(\log s)$ 位。
+模拟每一行时：
+\begin{enumerate}
+ \item 将两个源地址分别与 $O(s)$ 个存储位置的地址比较；
+ \item 用比较结果选出两个当前值，执行一次 NAND；
+ \item 对目标地址对应的位置写入结果，其余位置保留旧值。
+\end{enumerate}
+地址相等判断需 $O(\log s)$ 个门，单行模拟成本为 $O(s\log s)$。
+所有输入变量的初值固定为 $1$，并不需要作为额外输入传给求值器。
+将 $s$ 步模拟展开成一个电路，大小为
+\[
+ O(s^2\log s)\subseteq O(s^3).
+\]
+这里即使源程序重复写入同一变量，逐步更新存储的模拟仍然适用。
+
+\subsection*{(b) 字符编码也有立方上界}
+不能仅凭 ``解析是多项式时间'' 就直接得出立方上界。
+下面给出一个较粗但足够的 $O(s^3)$ 门数构造。
+
+把源文件中每一个字符位置都看作一个潜在的语句起点。
+固定语法的分隔符、换行和变量名边界可通过字符测试及区间前缀电路确定。
+对每个位置，提取该位置若为语句起点时的三个变量名：目标、第一源、第二源；
+若不是起点，则将该槽标记为无效。每个名字统一补齐到 $O(s)$ 位，包含终止标记。
+字符只有 $7$ 位，不能把字符数误当成比特数上的额外渐近因子。
+
+提取这些字段时，对每个潜在语句、每个名字中的字符位置，
+用至多 $s$ 个候选起点作选择，成本至多为 $O(s^3)$。
+一共只有 $O(s)$ 个字段；对每一对字段比较名字是否相同，
+每次用 $O(s)$ 个门，总成本仍为 $O(s^3)$。
+不必把很长的下标展开成一个巨大数组；比较变量标识符即可。
+如果语法允许数字下标有前导零，可以先去除前导零再比较，仍不改变该上界。
+
+随后按字符位置从小到大处理有效语句。对一个源变量，
+从之前语句中选出\emph{最后一次}写入同名变量的语句，取其已计算的值；
+如果该名字是输入变量，则值固定为 $1$。
+对固定语句，利用后缀 OR 得到 ``最后一次匹配'' 标志只需 $O(s)$ 个门，
+选值和执行 NAND 也只需 $O(s)$ 个门。
+展开所有语句需要 $O(s^2)$ 个门，最后选择输出变量的最终值即可。
+
+因此字段提取、名字比较、求值三部分合计为 $O(s^3)$，(b) 成立。
+上述构造只追求题目要求的上界，并不声称它最优。
+
+\subsection*{(c) 一个严格的 $\Omega(s)$ 下界}
+固定 $t\ge2$，构造由参数 $b=(b_1,\ldots,b_t)\in\bits^t$ 决定的程序 $P_b$。
+它只有一个输入 $V_0$，求值时设为 $1$。先执行
+\[
+ V_1=\NAND(V_0,V_0)=0.
+\]
+再对每个 $i$ 新建一个变量 $B_i$，执行
+\[
+ B_i=\NAND(V_{b_i},V_{b_i}).
+\]
+于是 $b_i=0$ 时选取 $V_0=1$，得到 $B_i=0$；
+$b_i=1$ 时选取 $V_1=0$，得到 $B_i=1$。
+因此 $B_i=b_i$。
+
+最后用两个 NAND 门实现一次 AND，依次求出
+\[
+ B_1\land B_2\land\cdots\land B_t.
+\]
+程序行数恰为
+\[
+ s=1+t+2(t-1)=3t-1,
+\]
+而它在全 $1$ 输入上的输出正是 $\bigwedge_{i=1}^t b_i$。
+
+在元组编码中，改变 $b_i$ 只改变第 $i$ 个选值语句的两个源地址，
+各 $i$ 对应的编码位置组彼此不交，所有变量编号、程序长度和其他元组均不变。
+比较 $b=(1,\ldots,1)$ 与仅将 $b_i$ 改成 $0$ 的参数，程序输出由 $1$ 变为 $0$。
+因此求值器必须使用第 $i$ 个位置组中的至少一个输入位，否则无法区分这两个合法编码。
+
+求值器于是必须依赖至少 $t$ 个不同的输入位。
+一个具有 $q$ 个二输入 NAND 门的非平凡单输出电路，最多直接使用 $2q$ 个不同输入位，故
+\[
+ 2q\ge t,\qquad q\ge t/2=\Omega(s).
+\]
+这不可能同时是 $O(\sqrt s)$，所以 (c) 为假。
+这里不是笼统地声称 ``必须读完整个程序''，而是展示了必须区分的合法程序族。
+
+\section{习题 5.2：比较两个输入字符串}
+
+\paragraph{题意}
+构造 $O(k)$ 行的 NAND-CIRC 程序，计算
+\[
+ \mathrm{EQUALS}_k(x,y)=1\quad\Longleftrightarrow\quad x=y,
+ \qquad x,y\in\bits^k.
+\]
+
+\paragraph{逐位判断相等}
+对 $i=0,\ldots,k-1$，执行
+\begin{align*}
+ a_i&=\NAND(x_i,y_i),\\
+ b_i&=\NAND(x_i,a_i),\\
+ c_i&=\NAND(y_i,a_i),\\
+ d_i&=\NAND(b_i,c_i)=x_i\oplus y_i,\\
+ e_i&=\NAND(d_i,d_i)=\neg(x_i\oplus y_i).
+\end{align*}
+每一位恰用 $5$ 个门，且 $e_i=1$ 当且仅当对应的两个输入位相等。
+
+\paragraph{合并所有位}
+令 $r_0=e_0$，对 $i=1,\ldots,k-1$ 执行
+\[
+ u_i=\NAND(r_{i-1},e_i),\qquad r_i=\NAND(u_i,u_i).
+\]
+于是 $r_i=r_{i-1}\land e_i$，最终输出为
+\[
+ r_{k-1}=\bigwedge_{i=0}^{k-1}\neg(x_i\oplus y_i).
+\]
+当 $k\ge1$ 时，总门数为
+\[
+ 5k+2(k-1)=7k-2=O(k).
+\]
+这两个循环是在\emph{构造程序时}展开的；得到的 NAND-CIRC 程序本身没有循环。
+最后一个门的目标变量直接命名为输出即可。
+
+\paragraph{空字符串情形}
+若题目的自然数包含 $0$，则 $k=0$ 时两个输入都是空字符串，函数恒为 $1$。
+在允许常数输出的约定下单独处理即可；通常的渐近 $O(k)$ 结论针对 $k\ge1$。
+
+\section{习题 5.3：与一个固定字符串比较}
+
+\paragraph{题意}
+给定固定的 $x'\in\bits^k$，构造 $O(k)$ 行的 NAND-CIRC 程序计算
+\[
+ \mathrm{EQUALS}_{x'}(x)=1\quad\Longleftrightarrow\quad x=x'.
+\]
+这里 $x'$ 是构造程序时已知的常量，不是运行时的另一组输入。
+
+\paragraph{构造}
+对每一位定义文字
+\[
+ \ell_i=
+ \begin{cases}
+  x_i,&x'_i=1,\\
+  \neg x_i,&x'_i=0.
+ \end{cases}
+\]
+显然 $\ell_i=1$ 当且仅当 $x_i=x'_i$，所以
+\[
+ \mathrm{EQUALS}_{x'}(x)=\bigwedge_{i=0}^{k-1}\ell_i.
+\]
+常量位为 $1$ 时直接使用输入线；常量位为 $0$ 时使用一行
+$\ell_i=\NAND(x_i,x_i)$。
+再按习题 5.2 的方法，用 $2(k-1)$ 个门求所有文字的 AND。
+
+若 $x'$ 有 $z$ 个零，当 $k\ge2$ 时门数为
+\[
+ z+2(k-1)\le3k-2.
+\]
+若 $k=1$ 且目标输出就是输入线，而语法要求输出必须由赋值产生，
+可用两次取反复制输入；$k=1$ 且需要取反则只需一个门。
+因此统一有 $O(k)$ 上界。$k=0$ 的约定与上一题相同。
+
+\section{习题 5.4：多输出电路下界与原题的量词问题}
+
+\paragraph{原题}
+原文要求证明存在常数 $\delta>0$，使得对每个充分大的 $n$ 和\emph{每个} $m$，
+都存在函数 $f:\bits^n\to\bits^m$，任何计算 $f$ 的 NAND 电路都至少需要
+\[
+ \delta\frac{m2^n}{n}
+\]
+个门。
+
+\subsection*{1. 为什么不限 $m$ 时不成立}
+固定 $n$。所有单输出函数 $g:\bits^n\to\bits$ 只有
+\[
+ Q_n=2^{2^n}
+\]
+个。利用析取范式，每个这样的函数都可以由至多 $B_n=O(n2^n)$ 个 NAND 门计算。
+把这些电路全部放在一起，共享同一组 $n$ 个输入，便得到一个计算\emph{所有}
+单输出函数的电路库，其总门数不超过某个整数
+\[
+ A_n\le Q_nB_n.
+\]
+这里只需知道 $A_n$ 是一个依赖于 $n$ 的有限整数，并不需要它很小。
+
+任意 $m$ 输出函数都可写成
+\[
+ f(x)=(f_1(x),\ldots,f_m(x)),
+\]
+每个 $f_j$ 都已经由电路库中的某一条线算出。
+如果模型允许重复使用输出线，只需把这些线接到输出端；
+即使要求每个输出对应不同的门，也可对每个输出附加两个 NAND 门：
+\[
+ a_j=\NAND(f_j,f_j),\qquad Y_j=\NAND(a_j,a_j)=f_j.
+\]
+因此\textbf{每一个} $m$ 输出函数都有大小至多 $A_n+2m$ 的电路。
+
+现在假设原题中的 $\delta>0$ 存在。选取足够大的 $n$，使
+\[
+ \delta\frac{2^n}{n}>3,
+\]
+再选取整数 $m\ge A_n$。此时所有 $m$ 输出函数都满足
+\[
+ \text{最小电路大小}\le A_n+2m\le3m
+ <\delta\frac{m2^n}{n}.
+\]
+这与原题声称存在某个函数达到该下界矛盾。
+
+因此，\textbf{原文 ``对每个 $m$'' 的版本是假的}。
+直观原因是：当输出数量极大时，可以预先算出所有可能的单输出函数，
+后面的输出只需要重复使用或复制这些结果。
+
+\subsection*{2. 一个正确版本及完整计数证明}
+一个常用且足够明确的修正版是：存在绝对常数 $\delta>0$，
+使得对充分大的 $n$ 及 $1\le m\le2^n$，存在 $f:\bits^n\to\bits^m$，其电路大小至少为
+$\delta m2^n/n$。
+
+\paragraph{函数总数}
+输入共有 $2^n$ 种，每个输入的输出有 $2^m$ 种选择，故函数总数为
+\[
+ (2^m)^{2^n}=2^{m2^n}.
+\]
+
+\paragraph{小电路的数量}
+考虑 $s\ge\max\{n,m,2\}$。将任意至多 $s$ 个门的电路补上无用门，
+并按拓扑序排列为恰好 $s$ 个门。
+每个 NAND 门的两个源各有至多 $n+s$ 种选择，
+每个输出端再从至多 $n+s$ 条线中选一个。
+允许不合法的选项只会扩大计数，故不同函数的数量至多
+\[
+ (n+s)^{2s+m}\le(2s)^{3s}
+ \le 2^{10s\log s}.
+\]
+这里不同编码可能计算相同函数，所以这是上界，不必要求编码唯一。
+
+\paragraph{选择参数}
+取 $\delta=1/40$，令
+\[
+ s=\left\lfloor\delta\frac{m2^n}{n}\right\rfloor.
+\]
+当 $n$ 充分大时，对所有 $1\le m\le2^n$，都有 $s\ge\max\{n,m,2\}$。
+另一方面，$s\le m2^n\le2^{2n}$，所以 $\log s\le2n$。于是
+\[
+ 10s\log s
+ \le20\delta m2^n
+ =\frac12m2^n
+ <m2^n.
+\]
+因此至多 $s$ 个门的电路所能计算的函数总数，严格少于所有函数总数。
+必有某个函数不能由至多 $s$ 个门的电路计算。
+它的最小门数是整数，故至少为
+\[
+ s+1>\delta\frac{m2^n}{n},
+\]
+得到所需下界。
+
+\paragraph{证明中究竟哪里需要限制 $m$}
+关键是 $\log s=O(n)$。
+如果任意放大 $m$，一般只能得到 $\log s=O(n+\log m)$，
+不能把这个因子无条件替换为 $O(n)$。
+同样的计数方法可推广到任意固定 $C>0$ 的范围 $m\le2^{Cn}$，
+但下界中的常数需要允许依赖 $C$。
+
+\section{习题 5.9：由元组恢复程序和函数}
+
+\paragraph{题目给出的编码}
+输入数 $n=3$，输出数 $m=1$，元组依次为
+\[
+\begin{gathered}
+ (3,2,2),\ (4,1,1),\ (5,3,4),\ (6,2,1),\ (7,6,6),\\
+ (8,0,0),\ (9,7,8),\ (10,5,0),\ (11,9,10).
+\end{gathered}
+\]
+每个三元组 $(i,j,k)$ 表示 $V_i=\NAND(V_j,V_k)$。
+按本书第 5.3 节的编号约定，最前面的 $n$ 个变量是输入，
+\textbf{最后面的 $m$ 个变量是输出}。因此本题输出为 $V_{11}$，不是 $V_3$。
+
+\paragraph{逐行求值}
+记 $a=x_0=V_0$、$b=x_1=V_1$、$c=x_2=V_2$。则
+\[
+\begin{array}{ccl}
+\toprule
+\text{变量}&\text{程序语句}&\text{化简后的值}\\
+\midrule
+V_3&\NAND(V_2,V_2)&\neg c\\
+V_4&\NAND(V_1,V_1)&\neg b\\
+V_5&\NAND(V_3,V_4)&b\lor c\\
+V_6&\NAND(V_2,V_1)&\neg(b\land c)\\
+V_7&\NAND(V_6,V_6)&b\land c\\
+V_8&\NAND(V_0,V_0)&\neg a\\
+V_9&\NAND(V_7,V_8)&\neg(b\land c\land\neg a)\\
+V_{10}&\NAND(V_5,V_0)&\neg((b\lor c)\land a)\\
+V_{11}&\NAND(V_9,V_{10})&(b\land c\land\neg a)\lor(a\land(b\lor c))\\
+\bottomrule
+\end{array}
+\]
+
+\paragraph{化简输出}
+由德摩根律和分配律，输出为
+\[
+ f(a,b,c)=(\neg a\land b\land c)\lor(a\land b)\lor(a\land c).
+\]
+再利用 $X\lor(\neg a\land Y)=(X\lor\neg a)\land(X\lor Y)$，
+或直接对 $a$ 分类，可得
+\[
+ \boxed{f(a,b,c)=(a\land b)\lor(a\land c)\lor(b\land c)=\MAJ_3(a,b,c).}
+\]
+更直观地说：$a=0$ 时必须 $b=c=1$ 才输出 $1$；
+$a=1$ 时只需 $b,c$ 至少一个为 $1$。两种情况合在一起，就是三位中至少两位为 $1$。
+
+\paragraph{真值表}
+按输入 $000,001,010,011,100,101,110,111$ 的字典序：
+\[
+\begin{array}{ccc|c}
+ a&b&c&f(a,b,c)\\
+\hline
+ 0&0&0&0\\
+ 0&0&1&0\\
+ 0&1&0&0\\
+ 0&1&1&1\\
+ 1&0&0&0\\
+ 1&0&1&1\\
+ 1&1&0&1\\
+ 1&1&1&1
+\end{array}
+\]
+因此题目所问的 $8$ 元组为
+\[
+ \boxed{(0,0,0,1,0,1,1,1).}
+\]
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{part}{English Solutions}
+\part*{English Solutions}
+
+\noindent
+Throughout this part, all logarithms are base $2$, and
+$[n]=\{0,\ldots,n-1\}$. Circuit size means the number of NAND gates;
+wires and fan-out do not contribute to the gate count. Statements about
+evaluators require correctness on valid program encodings.
+
+\section{Exercise 2.4: Encoding Bounded-Degree Graphs}
+
+\paragraph{Claim.}
+Let $G_n$ be the set of directed graphs on the labeled vertex set $[n]$
+with no self-loops and degree at most $10$ at every vertex.
+For all sufficiently large $n$, there is an injection
+\[
+ E:G_n\longrightarrow\bits^{\lfloor1000n\log n\rfloor}.
+\]
+
+\paragraph{Construction.}
+Set $\ell=\lceil\log n\rceil$. For each vertex $v$, in increasing order,
+record its outgoing adjacency list as follows:
+\begin{enumerate}
+ \item Store its out-degree $d_v\in\{0,\ldots,10\}$ using $4$ bits.
+ \item List its outgoing neighbors in increasing order, using $\ell$ bits
+       per vertex label and reserving exactly $10$ slots.
+ \item Fill any unused slots with zeros.
+\end{enumerate}
+The out-degree is at most $10$ whether the degree bound is interpreted
+as a bound on total degree or on out-degree. A real neighbor labeled $0$
+cannot be confused with padding because $d_v$ specifies the number of
+occupied slots.
+
+The resulting string has length
+\[
+ L=n\bigl(4+10\lceil\log n\rceil\bigr).
+\]
+For $n\ge2$, we have $\lceil\log n\rceil\le2\log n$ and
+$4\le4\log n$, so
+\[
+ L\le24n\log n\le\lfloor1000n\log n\rfloor.
+\]
+Append zeros to obtain exactly the required length.
+
+\paragraph{Injectivity.}
+Since $n$ is known, the string can be split into fixed-length records.
+The decoder reads $d_v$ and the first $d_v$ neighbor labels in each record.
+This uniquely recovers every outgoing adjacency list and hence every edge.
+Consequently, $E(G)=E(H)$ implies $G=H$, proving that $E$ is injective.
+
+\section{Exercise 2.5(1): Encoding Permutations as Graphs}
+
+\paragraph{Claim.}
+If $S_n$ is the set of bijections $\pi:[n]\to[n]$, then there is an
+injection $S_n\to G_{2n}$.
+
+\paragraph{Proof.}
+Partition the labeled vertex set $[2n]$ into
+\[
+ L=\{0,\ldots,n-1\},\qquad R=\{n,\ldots,2n-1\}.
+\]
+For $\pi\in S_n$, define $H_\pi$ by
+\[
+ E(H_\pi)=\{(i,n+\pi(i)):i\in[n]\}.
+\]
+Every vertex in $L$ has exactly one outgoing edge. Since $\pi$ is a
+bijection, every vertex in $R$ has exactly one incoming edge.
+Thus every vertex has total degree $1$, and there are no self-loops
+because the two parts are disjoint. In particular, $H_\pi\in G_{2n}$.
+
+If $\pi\ne\sigma$, choose $i$ with $\pi(i)\ne\sigma(i)$.
+The unique edge leaving $i$ is different in $H_\pi$ and $H_\sigma$,
+so these graphs are distinct. Therefore $\pi\mapsto H_\pi$ is injective.
+
+The fixed vertex labels are essential: the exercise concerns labeled
+graphs, not isomorphism classes. Without labels, all these matchings
+would be isomorphic.
+
+\section{Exercise 2.14: Encoding Finite Integer Sequences}
+
+\paragraph{Claim.}
+There is an injection $\mathbb Z^*\to\mathbb N$, including an encoding
+of the empty sequence.
+
+\paragraph{Construction.}
+First encode each integer by the nonnegative integer
+\[
+ h(z)=
+ \begin{cases}
+  2z,&z\ge0,\\
+  -2z-1,&z<0.
+ \end{cases}
+\]
+This is a bijection: an even value $a$ decodes to $a/2$, and an odd
+value $a$ decodes to $-(a+1)/2$.
+
+Let $p_0=2,p_1=3,p_2=5,\ldots$ be the primes in increasing order.
+Define
+\[
+ E(z_0,\ldots,z_{k-1})=\prod_{i=0}^{k-1}p_i^{h(z_i)+1},
+ \qquad E(\varepsilon)=1.
+\]
+For example, $E(-1,0,2)=2^2\cdot3\cdot5^5$.
+
+\paragraph{Injectivity.}
+The fundamental theorem of arithmetic gives a unique prime
+factorization of the encoded integer. All exponents in the product
+are positive, so the prime factors are exactly the first $k$ primes.
+We can therefore recover the length $k$, subtract $1$ from each exponent,
+and apply $h^{-1}$ to recover the entries in order.
+Only the empty sequence maps to $1$.
+Thus every encoded sequence is uniquely recoverable, proving injectivity.
+
+Adding $1$ to each exponent is necessary for this construction:
+without it, appending a zero to a sequence would introduce an exponent
+of zero and would not change the encoded number.
+
+\section{Exercise 3.9: Universality of LOOKUP}
+
+\paragraph{Claim.}
+The gate set $\{\LOOKUP_1,0,1\}$ is universal, where
+\[
+ \LOOKUP_1(a,b,c)=
+ \begin{cases}
+  a,&c=0,\\
+  b,&c=1.
+ \end{cases}
+\]
+The selector is the \emph{third} argument.
+
+\paragraph{Proof.}
+The usual Boolean gates have the following implementations:
+\begin{align*}
+ \neg x&=\LOOKUP_1(1,0,x),\\
+ x\land y&=\LOOKUP_1(0,y,x),\\
+ x\lor y&=\LOOKUP_1(y,1,x).
+\end{align*}
+Each identity follows by considering $x=0$ and $x=1$.
+Since AND, OR, and NOT form a universal basis, replacing their
+occurrences by these constructions proves the claim.
+
+Equivalently, set $t=\LOOKUP_1(1,0,y)=\neg y$. Then
+\[
+ \LOOKUP_1(1,t,x)=\neg(x\land y).
+\]
+Thus two LOOKUP gates implement one NAND gate, and universality
+also follows directly from the universality of NAND.
+
+\section{Exercise 3.14: A Linear-Size Majority Circuit}
+
+\paragraph{Claim.}
+There is an absolute constant $c$ such that, for every $n>1$,
+the strict majority function
+\[
+ \MAJ_n(x)=1\quad\Longleftrightarrow\quad
+ \sum_{i=0}^{n-1}x_i>n/2
+\]
+can be computed using at most $cn$ NAND gates.
+
+\subsection*{Step 1: Linear-size binary adders}
+A full adder computes
+\[
+ p=a\oplus b,\qquad d=p\oplus c_{\mathrm{in}},\qquad
+ c_{\mathrm{out}}=(a\land b)\lor(p\land c_{\mathrm{in}}).
+\]
+XOR, AND, and OR use at most $4$, $2$, and $3$ NAND gates respectively.
+Hence a full adder uses at most $15$ NAND gates. A ripple-carry adder
+for two $r$-bit numbers uses at most $15r$ gates and produces $r+1$
+output bits, including the final carry.
+
+If constant wires are not available initially, construct them once:
+\[
+ u=\NAND(x_0,x_0),\quad
+ \mathbf 1=\NAND(x_0,u),\quad
+ \mathbf 0=\NAND(\mathbf 1,\mathbf 1).
+\]
+This costs three gates, after which the constant wires may be shared.
+
+\subsection*{Step 2: Add the input bits in a balanced tree}
+Let $N=2^{\lceil\log n\rceil}$ and append $N-n$ zero bits.
+Then $n\le N<2n$, and the number of ones is unchanged.
+
+At level $j$, for $1\le j\le\log N$, combine two counts for blocks of
+$2^{j-1}$ input bits. Each child count is at most $2^{j-1}$ and therefore
+fits in $j$ bits. Thus each addition at this level uses at most $15j$
+gates. There are $N/2^j$ additions at level $j$, so all additions together
+use at most
+\[
+ 15\sum_{j=1}^{\log N}\frac{N}{2^j}j
+ \le15N\sum_{j=1}^{\infty}\frac{j}{2^j}
+ =30N<60n
+\]
+gates. The result is the binary representation of
+$S=\sum_{i=0}^{n-1}x_i$, using $O(\log n)$ bits.
+
+The corresponding recurrence is $T(N)=2T(N/2)+O(\log N)$.
+The linear bound arises because additions near the leaves involve
+short numbers; charging $\Theta(\log n)$ for every addition would
+give an unnecessarily large upper bound.
+
+\subsection*{Step 3: Compare against the threshold}
+Set $t=\lfloor n/2\rfloor+1$. Compare $S$ with $t$ from most significant
+bit to least significant bit. Maintain bits $e$ and $g$, where $e$
+means the prefixes seen so far are equal and $g$ means the prefix of
+$S$ is larger. Initially $e=1$ and $g=0$. At position $i$, update
+simultaneously by
+\[
+ g'=g\lor(e\land S_i\land\neg t_i),\qquad
+ e'=e\land\neg(S_i\oplus t_i).
+\]
+Each position requires only a constant number of NAND gates.
+At the end, $g\lor e$ is $1$ exactly when $S\ge t$, so the comparator
+costs $O(\log n)$ gates.
+
+The total size is $O(n)+O(\log n)+O(1)=O(n)$, as required.
+The threshold is determined by the \emph{original} length $n$, not the
+padded length $N$. In particular, a tie when $n$ is even must produce $0$.
+
+\section{Exercise 5.1: Which Evaluator Claim Is False?}
+
+\paragraph{Answer.}
+\textbf{Statement (c) is false.} Statements (a) and (b) are true.
+The evaluator receives the description of a NAND-CIRC program and
+must compute its output when all of the program's inputs are $1$.
+
+\subsection*{(a) Tuple encoding: the cubic bound is valid}
+A program of $s$ lines mentions at most $O(s)$ distinct variables.
+With the textbook's renumbering convention, each address has
+$O(\log s)$ bits.
+
+For each line, compare its two source addresses against all $O(s)$
+memory addresses, select the corresponding current values, and apply
+NAND. Then compare the destination address against the memory
+addresses and update the selected location, retaining every other
+value. Each address comparison uses $O(\log s)$ gates, so one step
+costs $O(s\log s)$ gates.
+
+Set all input locations initially to $1$. Unrolling all $s$ steps gives
+an evaluator of size
+\[
+ O(s^2\log s)\subseteq O(s^3).
+\]
+This construction also handles repeated assignments to a variable.
+
+\subsection*{(b) ASCII encoding: the cubic bound is also valid}
+Here $s$ counts characters, and the input encoding contains $7s$ bits.
+Simply saying that parsing is polynomial-time would not establish
+the particular cubic bound, so we describe a sufficiently conservative
+circuit construction.
+
+Treat every character position as a possible statement start.
+Character tests and prefix computations identify separators, line
+boundaries, and variable-name boundaries in the fixed syntax.
+For each possible start, extract the destination and the two source
+identifiers, padding each to length $O(s)$ with an end marker.
+Mark a slot invalid if it does not begin a statement.
+
+There are $O(s)$ fields. For each character in each field, selecting
+among at most $s$ possible starting positions costs $O(s)$ gates;
+thus extracting all fields costs at most $O(s^3)$ gates.
+Compare every pair of identifiers using $O(s)$ gates per comparison.
+There are $O(s^2)$ pairs, so this also costs $O(s^3)$ gates.
+The fixed seven-bit character width contributes only a constant factor.
+Large numerical subscripts need not be expanded into a large memory
+array: we compare identifiers instead. If leading zeros are permitted
+in subscripts, normalize them first, within the same bound.
+
+Now evaluate valid statement slots in their original order. For each
+source identifier, use its comparisons with earlier destinations to
+select the value from the \emph{last} matching assignment; input
+identifiers instead have value $1$. For a fixed source, the last-match
+flags are obtained by a suffix-OR scan in $O(s)$ gates. Selecting the
+value and computing the new NAND result also costs $O(s)$ gates per
+statement. Unrolling this stage costs $O(s^2)$ gates. Finally select
+the final values of the output variables.
+
+The total cost is therefore $O(s^3)$, proving (b).
+
+\subsection*{(c) A linear lower bound rules out the square-root bound}
+For each $t\ge2$ and $b=(b_1,\ldots,b_t)\in\bits^t$, construct a
+single-output program $P_b$ with one input $V_0$. On the required
+all-ones input, $V_0=1$. Begin with
+\[
+ V_1=\NAND(V_0,V_0)=0.
+\]
+For each $i$, create a fresh variable $B_i$ by the instruction
+\[
+ B_i=\NAND(V_{b_i},V_{b_i}).
+\]
+If $b_i=0$, this negates $V_0=1$ and produces $0$; if $b_i=1$, it
+negates $V_1=0$ and produces $1$. Hence $B_i=b_i$.
+
+Finally compute $B_1\land\cdots\land B_t$, using two NAND gates
+for each of the $t-1$ binary AND operations. The number of lines is
+\[
+ s=1+t+2(t-1)=3t-1,
+\]
+and the program's output on the all-ones input is $\bigwedge_i b_i$.
+
+Changing $b_i$ changes only the two source-address fields in its own
+instruction. These groups of encoding positions are disjoint for
+different $i$; the program length, variable numbering, and all other
+tuples remain unchanged.
+
+Compare the encoding for $b=(1,\ldots,1)$ with the encoding obtained
+by flipping only $b_i$ to zero. Their required outputs differ.
+Consequently, a correct evaluator must use at least one input bit
+from the $i$th position group, for every $i$. It must therefore depend
+on at least $t$ distinct input bits.
+
+A nontrivial single-output circuit with $q$ two-input NAND gates has
+only $2q$ gate-input ports, and hence can use at most $2q$ distinct
+external input bits. It follows that
+\[
+ q\ge t/2=\Omega(s).
+\]
+This contradicts an $O(\sqrt{s})$ bound along the unbounded sequence
+$s=3t-1$. Thus (c) is false. The argument uses only valid program
+encodings, not an assumption that the evaluator must read every bit.
+
+\section{Exercise 5.2: Equality of Two Strings}
+
+\paragraph{Claim.}
+For $k\ge1$, the function
+\[
+ \mathrm{EQUALS}_k(x,y)=1\quad\Longleftrightarrow\quad x=y,
+ \qquad x,y\in\bits^k,
+\]
+has an $O(k)$-line NAND-CIRC program.
+
+\paragraph{Construction.}
+For each position $i$, compute
+\begin{align*}
+ a_i&=\NAND(x_i,y_i),\\
+ b_i&=\NAND(x_i,a_i),\\
+ c_i&=\NAND(y_i,a_i),\\
+ d_i&=\NAND(b_i,c_i)=x_i\oplus y_i,\\
+ e_i&=\NAND(d_i,d_i)=\neg(x_i\oplus y_i).
+\end{align*}
+These five gates make $e_i=1$ exactly when $x_i=y_i$.
+Set $r_0=e_0$ and, for $i=1,\ldots,k-1$, compute
+\[
+ u_i=\NAND(r_{i-1},e_i),\qquad r_i=\NAND(u_i,u_i).
+\]
+Then $r_i=r_{i-1}\land e_i$, and the final output is
+\[
+ r_{k-1}=\bigwedge_{i=0}^{k-1}\neg(x_i\oplus y_i).
+\]
+It equals $1$ if and only if the entire strings agree.
+The number of gates is exactly
+\[
+ 5k+2(k-1)=7k-2=O(k).
+\]
+The indexed instructions are expanded when constructing the program;
+the resulting NAND-CIRC program is straight-line code, without loops.
+The last gate can be assigned directly to the output variable.
+
+If $k=0$ is included, the only pair consists of two empty strings,
+and equality is the constant-$1$ function. Handle this separately
+under the convention allowing constant outputs; the asymptotic bound
+above concerns positive $k$.
+
+\section{Exercise 5.3: Equality to a Fixed String}
+
+\paragraph{Claim.}
+For each fixed $x'\in\bits^k$, the function
+\[
+ \mathrm{EQUALS}_{x'}(x)=1\quad\Longleftrightarrow\quad x=x'
+\]
+has an $O(k)$-line NAND-CIRC program.
+
+\paragraph{Proof.}
+The string $x'$ is known when the program is constructed; it is not
+another runtime input. Define the literals
+\[
+ \ell_i=
+ \begin{cases}
+  x_i,&x'_i=1,\\
+  \neg x_i,&x'_i=0.
+ \end{cases}
+\]
+Each literal is $1$ exactly when its corresponding input bit matches
+the fixed bit. Therefore
+\[
+ \mathrm{EQUALS}_{x'}(x)=\bigwedge_{i=0}^{k-1}\ell_i.
+\]
+Use the input wire directly when $x'_i=1$, and use one NAND gate
+$\NAND(x_i,x_i)$ when $x'_i=0$. Combine the literals with $k-1$
+AND operations, each implemented using two NAND gates.
+
+If $x'$ contains $z$ zeros and $k\ge2$, the gate count is
+\[
+ z+2(k-1)\le3k-2.
+\]
+For $k=1$, a negation costs one gate. If the output must be an
+assigned variable and the desired function is the identity, copy
+the input using two successive negations. Thus the bound is $O(k)$
+in all positive-length cases. The empty-string case is handled as
+in Exercise 5.2.
+
+\section{Exercise 5.4: A Counting Bound and a Missing Restriction}
+
+\paragraph{The statement as printed.}
+The exercise asserts that there is a constant $\delta>0$ such that,
+for every sufficiently large $n$ and \emph{every} $m$, some function
+$f:\bits^n\to\bits^m$ requires at least $\delta m2^n/n$ NAND gates.
+\textbf{With no restriction on $m$, this statement is false.}
+
+\subsection*{1. Counterexample to the unrestricted statement}
+Fix $n$. There are exactly $Q_n=2^{2^n}$ single-output Boolean
+functions on $n$ input bits. Each has a NAND circuit of size at most
+$B_n=O(n2^n)$, for example by converting its disjunctive normal form
+to NAND gates.
+
+Place circuits for all these functions together, sharing their
+$n$ input wires. This gives a finite circuit library of size at most
+some integer $A_n\le Q_nB_n$, with a wire for every possible
+single-output function. The important fact is that $A_n$ depends
+only on $n$, not on the eventual number of outputs.
+
+For any $f:\bits^n\to\bits^m$, write
+\[
+ f(x)=(f_1(x),\ldots,f_m(x)).
+\]
+Each coordinate function $f_j$ is already available in the library.
+Even if the circuit definition requires distinct gates for distinct
+outputs, two extra gates per coordinate suffice:
+\[
+ a_j=\NAND(f_j,f_j),\qquad Y_j=\NAND(a_j,a_j)=f_j.
+\]
+Thus \emph{every} such $f$ has a circuit of size at most $A_n+2m$.
+
+Suppose the asserted constant $\delta>0$ existed. Choose $n$ large
+enough both for the assertion to apply and for $\delta2^n/n>3$.
+Then choose an integer $m\ge A_n$. For every function of these
+input and output lengths, the preceding construction gives
+\[
+ \text{minimum circuit size}\le A_n+2m\le3m
+ <\delta\frac{m2^n}{n}.
+\]
+This contradicts the claimed existence of a function requiring that
+many gates. Hence the original statement cannot hold for all $m$.
+
+The issue is sharing: with sufficiently many outputs, one may
+precompute every possible coordinate function and then reuse it.
+
+\subsection*{2. A corrected statement}
+A valid version is the following: there is an absolute constant
+$\delta>0$ such that, for every sufficiently large $n$ and every
+$1\le m\le2^n$, some $f:\bits^n\to\bits^m$ requires at least
+$\delta m2^n/n$ NAND gates. This restriction is supplied here; it
+is not present in the printed exercise.
+
+\paragraph{Counting all functions.}
+There are $2^n$ inputs, and each input may independently receive any
+of $2^m$ output strings. Hence the number of functions is
+\[
+ (2^m)^{2^n}=2^{m2^n}.
+\]
+
+\paragraph{Counting small circuits.}
+Let $s\ge\max\{n,m,2\}$. Pad any circuit of at most $s$ gates
+with unused gates and list its gates in topological order.
+Each gate has two sources, each with at most $n+s$ choices.
+Each of the $m$ output positions has at most $n+s$ choices of wire.
+Allowing invalid descriptions only increases this count, so the
+number of functions computed by these circuits is at most
+\[
+ (n+s)^{2s+m}\le(2s)^{3s}\le2^{10s\log s}.
+\]
+Distinct descriptions may compute the same function, which is
+harmless because we need an upper bound.
+
+\paragraph{Choosing the size threshold.}
+Take $\delta=1/40$ and let
+\[
+ s=\left\lfloor\delta\frac{m2^n}{n}\right\rfloor.
+\]
+For all sufficiently large $n$, uniformly over $1\le m\le2^n$,
+we have $s\ge\max\{n,m,2\}$. Also
+$s\le m2^n\le2^{2n}$, so $\log s\le2n$. Consequently,
+\[
+ 10s\log s\le20\delta m2^n=\frac12m2^n<m2^n.
+\]
+There are strictly fewer functions computed by circuits of at most
+$s$ gates than there are functions altogether. Some function
+therefore requires at least
+\[
+ s+1>\delta\frac{m2^n}{n}
+\]
+gates, proving the corrected claim.
+
+\paragraph{Where the restriction is used.}
+The crucial estimate is $\log s=O(n)$. With unrestricted $m$, the
+corresponding estimate involves $n+\log m$, and this cannot be
+replaced uniformly by $O(n)$.
+The same counting proof works for $m\le2^{Cn}$ for any fixed $C>0$,
+with a lower-bound constant allowed to depend on $C$.
+
+\section{Exercise 5.9: Decoding the NAND Program}
+
+\paragraph{Encoding convention.}
+The program has $n=3$ inputs and $m=1$ output, with instructions
+\[
+\begin{gathered}
+ (3,2,2),\ (4,1,1),\ (5,3,4),\ (6,2,1),\ (7,6,6),\\
+ (8,0,0),\ (9,7,8),\ (10,5,0),\ (11,9,10).
+\end{gathered}
+\]
+A tuple $(i,j,k)$ means $V_i=\NAND(V_j,V_k)$.
+Under the textbook's convention, the first $n$ variables are inputs
+and the \emph{last} $m$ variables are outputs. Thus the output is
+$V_{11}$, not $V_3$.
+
+\paragraph{Evaluating the instructions.}
+Write $a=V_0$, $b=V_1$, and $c=V_2$. Successive simplification gives
+\begin{align*}
+ V_3&=\neg c,& V_4&=\neg b,\\
+ V_5&=b\lor c,& V_6&=\neg(b\land c),\\
+ V_7&=b\land c,& V_8&=\neg a,\\
+ V_9&=\neg(b\land c\land\neg a),&
+ V_{10}&=\neg((b\lor c)\land a).
+\end{align*}
+By De Morgan's law, the final output is
+\begin{align*}
+ f(a,b,c)=V_{11}
+ &=(\neg a\land b\land c)\lor(a\land(b\lor c))\\
+ &=(\neg a\land b\land c)\lor(a\land b)\lor(a\land c)\\
+ &=(a\land b)\lor(a\land c)\lor(b\land c).
+\end{align*}
+For the last equality, combine
+$(a\land b)\lor(\neg a\land b\land c)
+=b\land(a\lor(\neg a\land c))=b\land(a\lor c)$.
+
+\paragraph{1. Truth table.}
+\[
+\begin{array}{ccc|c}
+ a&b&c&P(abc)\\
+\hline
+ 0&0&0&0\\
+ 0&0&1&0\\
+ 0&1&0&0\\
+ 0&1&1&1\\
+ 1&0&0&0\\
+ 1&0&1&1\\
+ 1&1&0&1\\
+ 1&1&1&1
+\end{array}
+\]
+In the requested order $000,001,010,011,100,101,110,111$, the output
+tuple is
+\[
+ \boxed{(0,0,0,1,0,1,1,1).}
+\]
+
+\paragraph{2. Description in words.}
+The program computes the majority function on three bits. It outputs
+$1$ exactly when at least two of its three input bits are $1$.
+Indeed, if $a=0$, both $b$ and $c$ must be $1$; if $a=1$, at least
+one of $b,c$ must be $1$.
+
+\end{document}
