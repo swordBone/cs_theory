@@ -7,6 +7,7 @@
 - [Week 1 整理笔记](./理论计算机科学导引_Week1_整理笔记.md)
 - [Week 2 整理笔记](./理论计算机科学导引_Week2_整理笔记.md)
 - [Week 3 整理笔记](./理论计算机科学导引_Week3_整理笔记.md)
+- [Week 4 整理笔记](./理论计算机科学导引_Week4_整理笔记.md)
 
 ## 习题解答 / Exercise Solutions
 
@@ -39,3 +40,4 @@ GitHub Actions compiles relevant changes on `main` with XeLaTeX and publishes th
 | Week 1 | 问题与函数、编码、可数性与不可计算性 |
 | Week 2 | 布尔电路与 NAND、加法、LOOKUP、分块共享与 $`O(m2^n/n)`$ 上界 |
 | Week 3 | SIZE、程序编码与计数下界、规模层级定理、通用求值器 EVAL |
+| Week 4 | 变长输入与语言、DFA/NFA、正则语言、并集与连接封闭性、子集构造 |
