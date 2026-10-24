@@ -39,7 +39,7 @@ $`\epsilon`$ 是长度为 0 的空串。集合 $`\Sigma^*`$ 中的每个字符�
 定义
 
 ```math
-\operatorname{bf}(x,i,c)=
+\mathrm{bf}(x,i,c)=
 \begin{cases}
 f(x)_i,&c=0\text{ 且 }i\lt |f(x)|,\\
 1,&c=1\text{ 且 }i\lt |f(x)|,\\
@@ -66,12 +66,12 @@ f(x)_i,&c=0\text{ 且 }i\lt |f(x)|,\\
 
 ```math
 \langle x,i,c\rangle
-=1^{|x|}0\;x\;\operatorname{bin}(i)\;c,
+=1^{|x|}0\;x\;\mathrm{bin}(i)\;c,
 ```
 
-其中 $`\operatorname{bin}(i)`$ 是无多余前导零的二进制表示，$`\operatorname{bin}(0)=0`$。读开头连续的 1 得到 `|x|`，跳过分隔用的 0，读取接下来的 `|x|` 位作为 `x`；剩余部分的最后一位是 `c`，之前的非空部分是 `i` 的编码。
+其中 $`\mathrm{bin}(i)`$ 是无多余前导零的二进制表示，$`\mathrm{bin}(0)=0`$。读开头连续的 1 得到 `|x|`，跳过分隔用的 0，读取接下来的 `|x|` 位作为 `x`；剩余部分的最后一位是 `c`，之前的非空部分是 `i` 的编码。
 
-这个编码可以唯一解析。对无法按此规则解析的串，规定输出为 0，于是严格得到一个全函数 $`\operatorname{bf}:\Sigma^*\to\{0,1\}`$。下文直接写 `bf(x,i,c)`，省略编码细节。
+这个编码可以唯一解析。对无法按此规则解析的串，规定输出为 0，于是严格得到一个全函数 $`\mathrm{bf}:\Sigma^*\to\{0,1\}`$。下文直接写 `bf(x,i,c)`，省略编码细节。
 
 ### 2.3 从计算 f 的程序得到计算 bf 的程序
 
@@ -115,7 +115,7 @@ def compute_f(x):
 
 ```math
 f\text{ 可计算}\quad\Longleftrightarrow\quad
-\operatorname{bf}\text{ 可计算}.
+\mathrm{bf}\text{ 可计算}.
 ```
 
 这里证明的是可计算性等价，不是运行时间完全相同，更不是“某个函数可计算就一定能用 DFA 计算”。恢复程序使用的计数器和输出存储可以增长，未必是常数空间。
@@ -157,7 +157,7 @@ $`\Sigma^*`$ 包含所有有限二进制串，包括空串；它是一个可数�
 任意长度输入的奇偶校验函数为
 
 ```math
-\operatorname{XOR}(x)
+\mathrm{XOR}(x)
 =\left(\sum_{i=0}^{|x|-1}x_i\right)\bmod2.
 ```
 

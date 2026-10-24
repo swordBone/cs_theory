@@ -2,6 +2,10 @@
 
 这个仓库用于整理《理论计算机科学导引》的课程笔记。
 
+## 小测复习
+
+- [Week 1-5 小测复习汇总](./理论计算机科学导引_Week1-5_小测复习汇总.md)：公式速查、核心证明、构造例题、易错点和 12 道自测题及参考答案。
+
 ## 笔记列表
 
 - [Week 1 整理笔记](./理论计算机科学导引_Week1_整理笔记.md)
@@ -43,3 +47,9 @@ GitHub Actions compiles relevant changes on `main` with XeLaTeX and publishes th
 | Week 3 | SIZE、程序编码与计数下界、规模层级定理、通用求值器 EVAL |
 | Week 4 | 变长输入与语言、DFA/NFA、正则语言、并集与连接封闭性、子集构造 |
 | Week 5 | DFA/NFA 等价、Kleene 星、正则表达式、Thompson 构造、状态消除法与路径递推 |
+
+## 数学公式显示
+
+请在文件页选择 **Preview** 阅读；**Code** 和 **Raw** 显示的是源代码。行内公式使用 GitHub 支持的美元符号加反引号写法，独立公式使用 `math` 围栏，参见 [GitHub 数学公式文档](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions)。
+
+第四周已将 GitHub 页面实际拒绝的 `\operatorname` 写法改为兼容的 `\mathrm`。后续检查既要验证 TeX 语法，也要检查 GitHub 的实际预览；仅在本地能渲染不代表平台一定接受全部命令。程序、真值表和伪代码仍保留代码块，不属于未渲染公式。
