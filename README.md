@@ -14,6 +14,10 @@
 - [Week 4 整理笔记](./理论计算机科学导引_Week4_整理笔记.md)
 - [Week 5 整理笔记](./理论计算机科学导引_Week5_整理笔记.md)
 
+## 作业解答
+
+- [作业 2 解答](./作业2_解答.md)：正则语言的补集、两个四状态 NFA 构造、含空转移的 NFA 转 DFA、正则表达式及重复串语言的抽引引理证明。
+
 ## 习题解答 / Exercise Solutions
 
 - [在线阅读最新版 PDF / Read the latest PDF](https://swordbone.github.io/cs_theory/solutions.pdf)
