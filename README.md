@@ -14,6 +14,14 @@
 - [Week 4 整理笔记](./理论计算机科学导引_Week4_整理笔记.md)
 - [Week 5 整理笔记](./理论计算机科学导引_Week5_整理笔记.md)
 
+## L5 专题补充
+
+根据新增的 `L5_0_1793243778225.pdf` 整理。原理按 Week 4、Week 5 通读，下面三篇用于练习转换和非正则性证明；[专题目录](./notes/l5-automata/README.md)提供材料页码与阅读路线。
+
+- [ε 闭包与子集构造练习](./notes/l5-automata/01-subset-construction.md)：初始闭包、字符后的闭包、空集陷阱与完整转移表。
+- [正则表达式与状态消除例题](./notes/l5-automata/02-regular-expressions-and-elimination.md)：`(01∪0)*` 的 ε-NFA，以及 1 的个数模 3 余 1 的消除过程。
+- [泵引理与非正则性证明](./notes/l5-automata/03-pumping-lemma.md)：量词、鸽巢证明、等量 0/1 与平方长度语言、带答案自测。
+
 ## 作业解答
 
 - [作业 2 解答](./作业2_解答.md)：正则语言的补集、两个四状态 NFA 构造、含空转移的 NFA 转 DFA、正则表达式及重复串语言的抽引引理证明。
