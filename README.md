@@ -13,6 +13,7 @@
 - [Week 3 整理笔记](./理论计算机科学导引_Week3_整理笔记.md)
 - [Week 4 整理笔记](./理论计算机科学导引_Week4_整理笔记.md)
 - [Week 5 整理笔记](./理论计算机科学导引_Week5_整理笔记.md)
+- [Week 9 整理笔记](./理论计算机科学导引_Week9_整理笔记.md)：PDA 与 CFG 等价、CFL 封闭性、抽引定理及后缀闭包，含完整证明。
 
 ## L5 专题补充
 
@@ -59,6 +60,7 @@ GitHub Actions compiles relevant changes on `main` with XeLaTeX and publishes th
 | Week 3 | SIZE、程序编码与计数下界、规模层级定理、通用求值器 EVAL |
 | Week 4 | 变长输入与语言、DFA/NFA、正则语言、并集与连接封闭性、子集构造 |
 | Week 5 | DFA/NFA 等价、Kleene 星、正则表达式、Thompson 构造、状态消除法与路径递推 |
+| Week 9 | 下推自动机、上下文无关文法、双向转换、CFL 抽引定理、交与补不封闭、后缀闭包 |
 
 ## 数学公式显示
 
