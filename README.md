@@ -13,6 +13,8 @@
 - [Week 3 整理笔记](./理论计算机科学导引_Week3_整理笔记.md)
 - [Week 4 整理笔记](./理论计算机科学导引_Week4_整理笔记.md)
 - [Week 5 整理笔记](./理论计算机科学导引_Week5_整理笔记.md)
+- [Week6and7 合并笔记](./理论计算机科学导引_Week6and7_整理笔记.md)：子集构造、正则表达式、状态消除、路径递推与正则语言抽引定理；两份相同课件合并整理。
+- [Week 8 整理笔记](./理论计算机科学导引_Week8_整理笔记.md)：PDA 的配置与接受、等量计数与回文、CFG 推导、CFG 到 PDA 的完整证明。
 - [Week 9 整理笔记](./理论计算机科学导引_Week9_整理笔记.md)：PDA 与 CFG 等价、CFL 封闭性、抽引定理及后缀闭包，含完整证明。
 
 ## L5 专题补充
@@ -60,6 +62,8 @@ GitHub Actions compiles relevant changes on `main` with XeLaTeX and publishes th
 | Week 3 | SIZE、程序编码与计数下界、规模层级定理、通用求值器 EVAL |
 | Week 4 | 变长输入与语言、DFA/NFA、正则语言、并集与连接封闭性、子集构造 |
 | Week 5 | DFA/NFA 等价、Kleene 星、正则表达式、Thompson 构造、状态消除法与路径递推 |
+| Week 6 and 7 | 合并相同课件；自动机转换例题、状态消除的完整计算、抽引定理证明与非正则性 |
+| Week 8 | 下推自动机、空串与栈语义、等量计数、回文、CFG 与 CFG→PDA |
 | Week 9 | 下推自动机、上下文无关文法、双向转换、CFL 抽引定理、交与补不封闭、后缀闭包 |
 
 ## 数学公式显示
@@ -67,3 +71,5 @@ GitHub Actions compiles relevant changes on `main` with XeLaTeX and publishes th
 请在文件页选择 **Preview** 阅读；**Code** 和 **Raw** 显示的是源代码。行内公式使用 GitHub 支持的美元符号加反引号写法，独立公式使用 `math` 围栏，参见 [GitHub 数学公式文档](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions)。
 
 第四周已将 GitHub 页面实际拒绝的 `\operatorname` 写法改为兼容的 `\mathrm`。后续检查既要验证 TeX 语法，也要检查 GitHub 的实际预览；仅在本地能渲染不代表平台一定接受全部命令。程序、真值表和伪代码仍保留代码块，不属于未渲染公式。
+
+2026-11-15 已逐页检查此前 13 份 Markdown 的 GitHub 预览，1,942 处数学公式均已渲染，未返回公式错误；本次另将普通代码块中的数学表达式、文本形式的状态下标统一为数学排版。后续新增笔记也按相同方式检查。复制公式时请复制源文件中的完整数学标记；从渲染页面直接复制成纯文本，可能丢失上下标层级。

@@ -107,11 +107,8 @@ x\in\{0,1\}^n
 
 把输入 bit 赋给输入节点：
 
-```text
-X[0] = x_0
-X[1] = x_1
-...
-X[n-1] = x_{n-1}
+```math
+X[j]=x_j,\qquad 0\le j<n.
 ```
 
 然后沿着电路从前往后计算每个门的值，最后得到：
@@ -220,12 +217,7 @@ O(s)
 - AND 需要 2 个 NAND。
 - OR 需要 3 个 NAND。
 
-因此转换只带来常数倍开销。手写笔记里记为：
-
-```text
-NAND circuit <=> Boolean circuit
-s gates       O(s) gates
-```
+因此，两种电路模型可以互相模拟，转换只带来常数倍开销：一个有 $`s`$ 个门的 AND/OR/NOT 电路可转换为 $`O(s)`$ 个 NAND 门；反方向，把一个 NAND 门换成一个 AND 门加一个 NOT 门即可。
 
 这就是为什么课程后面常常只研究 NAND 电路，而不失一般性。
 
@@ -582,8 +574,8 @@ $`\mathrm{LOOKUP}_k`$ 是一个查表函数，用来从长度为 $`2^k`$ 的表�
 
 1. 数据表：
 
-```text
-X[0], X[1], ..., X[2^k - 1]
+```math
+X[0],\ X[1],\ \ldots,\ X[2^k-1].
 ```
 
 共有 $`2^k`$ 个 bit。
@@ -729,14 +721,11 @@ f(u,v)=\mathrm{LOOKUP}_{n-k}(G(v),u).
 
 本周笔记的主线是：
 
-```text
-有限函数 f: {0,1}^n -> {0,1}^m
-  -> 可以用布尔电路计算
-  -> AND/OR/NOT 电路可转成 NAND 电路
-  -> NAND 电路可写成 NAND-CIRC program
-  -> 程序的语法糖可以展开成 NAND 行
-  -> LOOKUP_k 展示了如何用电路实现查表
-```
+1. 任意有限函数 $`f:\{0,1\}^n\to\{0,1\}^m`$ 都可用布尔电路计算。
+2. AND/OR/NOT 电路可转成 NAND 电路。
+3. NAND 电路可写成 NAND-CIRC 程序。
+4. 程序的语法糖可以展开成 NAND 行。
+5. $`\mathrm{LOOKUP}_k`$ 展示了如何用电路实现查表。
 
 更概念化地说：
 
