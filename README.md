@@ -76,3 +76,5 @@ GitHub Actions compiles relevant changes on `main` with XeLaTeX and publishes th
 第四周已将 GitHub 页面实际拒绝的 `\operatorname` 写法改为兼容的 `\mathrm`。后续检查既要验证 TeX 语法，也要检查 GitHub 的实际预览；仅在本地能渲染不代表平台一定接受全部命令。程序、真值表和伪代码仍保留代码块，不属于未渲染公式。
 
 2026-11-15 已逐页检查此前 13 份 Markdown 的 GitHub 预览，1,942 处数学公式均已渲染，未返回公式错误；本次另将普通代码块中的数学表达式、文本形式的状态下标统一为数学排版。后续新增笔记也按相同方式检查。复制公式时请复制源文件中的完整数学标记；从渲染页面直接复制成纯文本，可能丢失上下标层级。
+
+2026-11-16 新增 Week 10 后，复查全仓 17 份 Markdown，共 2,790 处公式，GitHub 预览均已成功渲染。检查中发现 Week 10 输入初始化的分段公式使用直接的小于号时，GitHub 报 `Missing \end{cases}`；改用 `\lt` 后恢复正常。分段公式中的小于关系优先使用该写法，避免本地 TeX 检查通过但网页仍无法显示。
