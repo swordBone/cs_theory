@@ -229,13 +229,13 @@ target = NAND(left, right)
 ```math
 X[i]=
 \begin{cases}
-x_i,&0\le i<n,\\
+x_i,&0\le i\lt n,\\
 0,&i\ge n,
 \end{cases}
 \qquad
 X_{\mathrm{nonblank}}[i]=
 \begin{cases}
-1,&0\le i<n,\\
+1,&0\le i\lt n,\\
 0,&i\ge n.
 \end{cases}
 ```
