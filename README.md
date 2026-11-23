@@ -17,6 +17,7 @@
 - [Week 8 整理笔记](./理论计算机科学导引_Week8_整理笔记.md)：PDA 的配置与接受、等量计数与回文、CFG 推导、CFG 到 PDA 的完整证明。
 - [Week 9 整理笔记](./理论计算机科学导引_Week9_整理笔记.md)：PDA 与 CFG 等价、CFL 封闭性、抽引定理及后缀闭包，含完整证明。
 - [Week 10 整理笔记](./理论计算机科学导引_Week10_整理笔记.md)：图灵机、NAND-TM、二进制加一、双向模拟，以及跳转、随机访问和多维数组的实现思路。
+- [Week 11 整理笔记](./理论计算机科学导引_Week11_整理笔记.md)：通用图灵机、对角化、停机问题、可计算归约和 Rice 定理。
 
 ## L5 专题补充
 
@@ -68,6 +69,7 @@ GitHub Actions compiles relevant changes on `main` with XeLaTeX and publishes th
 | Week 8 | 下推自动机、空串与栈语义、等量计数、回文、CFG 与 CFG→PDA |
 | Week 9 | 下推自动机、上下文无关文法、双向转换、CFL 抽引定理、交与补不封闭、后缀闭包 |
 | Week 10 | 图灵机运行与输出、NAND-TM 语法、INC 不变式、两种模型的双向模拟、常用编程功能的模拟 |
+| Week 11 | 图灵机编码与通用模拟、停机问题、HALTONZERO 与 ZEROFUNC 的归约、Rice 定理 |
 
 ## 数学公式显示
 
